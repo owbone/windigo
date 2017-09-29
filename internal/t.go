@@ -43,6 +43,41 @@ func (t *T) AssertEqual(a, b interface{}) {
 	}
 }
 
+// AssertSuccess fails and aborts the current test if the specified err is not
+// nil.
+func (t *T) AssertSuccess(err error) {
+	if err != nil {
+		log.Printf("Unexpected error occurred: %#v")
+		t.Failed = true
+		t.abort()
+	}
+}
+
+// AssertFailure fails and aborts the current test if the specified error is
+// nil.
+func (t *T) AssertFailure(err error) {
+	if err == nil {
+		log.Printf("Expected error to have occurred.")
+		t.Failed = true
+		t.abort()
+	}
+}
+
+// AssertError fails and aborts the current test if the error does not match
+// the expected error.
+func (t *T) AssertError(err, expected error) {
+	if err == nil {
+		log.Printf("Error did not occur. Expected error\n\n\t%#v")
+		t.Failed = true
+		t.abort()
+	}
+	if err != expected {
+		log.Printf("Error\n\n\t%#v\n\ndoes not match expected error\n\n\t%#v", err, expected)
+		t.Failed = true
+		t.abort()
+	}
+}
+
 // ExpectFalse fails the test if the boolean is not false.
 func (t *T) ExpectFalse(v bool) {
 	if v {
@@ -63,6 +98,35 @@ func (t *T) ExpectTrue(v bool) {
 func (t *T) ExpectEqual(a, b interface{}) {
 	if !reflect.DeepEqual(a, b) {
 		log.Printf("Expectation failed:\n\t%#v\n\ndoes not equal\n\n\t%#v", a, b)
+		t.Failed = true
+	}
+}
+
+// ExpectSuccess fails the current test if the specified err is not nil.
+func (t *T) ExpectSuccess(err error) {
+	if err != nil {
+		log.Printf("Unexpected error occurred: %#v")
+		t.Failed = true
+	}
+}
+
+// ExpectFailure fails the current test if the specified error is nil.
+func (t *T) ExpectFailure(err error) {
+	if err == nil {
+		log.Printf("Expected error to have occurred.")
+		t.Failed = true
+	}
+}
+
+// ExpectError fails the current test if the error does not match the expected
+// error.
+func (t *T) ExpectError(err, expected error) {
+	if err == nil {
+		log.Printf("Error did not occur. Expected error\n\n\t%#v")
+		t.Failed = true
+	}
+	if err != expected {
+		log.Printf("Error\n\n\t%#v\n\ndoes not match expected error\n\n\t%#v", err, expected)
 		t.Failed = true
 	}
 }

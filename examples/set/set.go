@@ -33,6 +33,9 @@ func (s IntSet) Contains(value int) bool {
 
 // Clone creates a new, independent copy of the set.
 func (s IntSet) Clone() IntSet {
+	if s.m == nil {
+		return s
+	}
 	cloned := IntSet{
 		m: make(map[int]struct{}, len(s.m)),
 	}

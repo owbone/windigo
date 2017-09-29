@@ -26,6 +26,18 @@ type T interface {
 	// are not deeply equal.
 	AssertEqual(a, b interface{})
 
+	// AssertSuccess fails and aborts the current test if the specified err is
+	// not nil.
+	AssertSuccess(err error)
+
+	// AssertFailure fails and aborts the current test if the specified error
+	// is nil.
+	AssertFailure(err error)
+
+	// AssertError fails and aborts the current test if the error does not
+	// match the expected error.
+	AssertError(err, expected error)
+
 	// ExpectFalse fails the current test if the specified boolean is not
 	// false.
 	ExpectFalse(bool)
@@ -36,6 +48,16 @@ type T interface {
 	// ExpectEqual fails the current test if the specified values are not
 	// deeply equal.
 	ExpectEqual(a, b interface{})
+
+	// ExpectSuccess fails the current test if the specified err is not nil.
+	ExpectSuccess(err error)
+
+	// ExpectFailure fails the current test if the specified error is nil.
+	ExpectFailure(err error)
+
+	// ExpectError fails the current test if the error does not match the
+	// expected error.
+	ExpectError(err, expected error)
 }
 
 type testCase struct {
